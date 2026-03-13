@@ -8,16 +8,52 @@
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e1e2f">
+    <meta name="theme-color" content="#1a1a2e" id="meta-theme-color">
     
     <!-- Styles -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <header>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro" title="Alternar tema">
+            <span class="icon-dark" aria-hidden="true">🌙</span>
+            <span class="icon-light" aria-hidden="true">☀️</span>
+        </button>
         <h1>Jogo da Velha</h1>
         <p>Um showcase de tecnologias HTML5</p>
     </header>
+
+    <!-- Modal de Configuração Inicial -->
+    <dialog id="setup-dialog" class="setup-dialog">
+        <h2>Configurar Jogo</h2>
+        <form id="setup-form">
+            <div class="setting-group">
+                <label for="player1-name">Jogador 1 (X):</label>
+                <input type="text" id="player1-name" placeholder="Nome do jogador 1" maxlength="20" required>
+            </div>
+            <div class="setting-group">
+                <label for="game-mode">Modo de jogo:</label>
+                <select id="game-mode">
+                    <option value="2p">2 Jogadores</option>
+                    <option value="ai">vs Computador</option>
+                </select>
+            </div>
+            <div class="setting-group" id="player2-group">
+                <label for="player2-name">Jogador 2 (O):</label>
+                <input type="text" id="player2-name" placeholder="Nome do jogador 2" maxlength="20">
+            </div>
+            <div class="setting-group hidden" id="difficulty-group">
+                <label for="difficulty">Dificuldade da IA:</label>
+                <select id="difficulty">
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Médio</option>
+                    <option value="hard">Difícil</option>
+                    <option value="very_hard">Muito Difícil</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Iniciar Jogo</button>
+        </form>
+    </dialog>
 
     <main>
         <aside class="settings-panel">
@@ -29,26 +65,29 @@
             </div>
 
             <div class="setting-group">
-                <label for="color-o">Cor da IA (O):</label>
+                <label for="color-o">Cor do Jogador (O):</label>
                 <input type="color" id="color-o" name="color-o" value="#ff007f">
             </div>
 
-            <div class="setting-group">
-                <label for="difficulty">Dificuldade da IA:</label>
-                <select id="difficulty">
+            <div class="setting-group hidden" id="difficulty-settings">
+                <label for="difficulty-select">Dificuldade da IA:</label>
+                <select id="difficulty-select">
                     <option value="easy">Fácil</option>
-                    <option value="hard" selected>Imbatível (Minimax)</option>
+                    <option value="medium">Médio</option>
+                    <option value="hard">Difícil</option>
+                    <option value="very_hard">Muito Difícil</option>
                 </select>
             </div>
 
             <button id="btn-reset" class="btn">Reiniciar Partida</button>
+            <button id="btn-setup" class="btn btn-outline">Alterar Jogadores</button>
             <button id="btn-clear-score" class="btn btn-outline">Zerar Placar</button>
         </aside>
 
         <section class="game-area">
             <div class="scoreboard">
                 <div class="scorebox score-x">
-                    <span>Você (X)</span>
+                    <span id="player1-label">Jogador 1 (X)</span>
                     <strong id="score-val-x">0</strong>
                 </div>
                 <div class="scorebox score-draw">
@@ -56,7 +95,7 @@
                     <strong id="score-val-draw">0</strong>
                 </div>
                 <div class="scorebox score-o">
-                    <span>IA (O)</span>
+                    <span id="player2-label">Jogador 2 (O)</span>
                     <strong id="score-val-o">0</strong>
                 </div>
             </div>

@@ -2,7 +2,7 @@
   "name": "Jogo da Velha HTML5",
   "short_name": "Velha",
   "description": "Um Jogo da Velha focado em recursos HTML5 e PWA.",
-  "start_url": "/index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#1e1e2f",
   "theme_color": "#1e1e2f",
