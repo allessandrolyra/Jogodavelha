@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jogo da Velha Avançado com HTML5">
+    <title>Jogo da Velha HTML5</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1a1a2e" id="meta-theme-color">
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro" title="Alternar tema">
+            <span class="icon-dark" aria-hidden="true">🌙</span>
+            <span class="icon-light" aria-hidden="true">☀️</span>
+        </button>
+        <h1>Jogo da Velha</h1>
+        <p>Um showcase de tecnologias HTML5</p>
+    </header>
+
+    <!-- Modal de Configuração Inicial -->
+    <dialog id="setup-dialog" class="setup-dialog">
+        <h2>Configurar Jogo</h2>
+        <form id="setup-form">
+            <div class="setting-group">
+                <label for="player1-name">Jogador 1 (X):</label>
+                <input type="text" id="player1-name" placeholder="Nome do jogador 1" maxlength="20" required>
+            </div>
+            <div class="setting-group">
+                <label for="game-mode">Modo de jogo:</label>
+                <select id="game-mode">
+                    <option value="2p">2 Jogadores</option>
+                    <option value="ai">vs Computador</option>
+                </select>
+            </div>
+            <div class="setting-group" id="player2-group">
+                <label for="player2-name">Jogador 2 (O):</label>
+                <input type="text" id="player2-name" placeholder="Nome do jogador 2" maxlength="20">
+            </div>
+            <div class="setting-group hidden" id="difficulty-group">
+                <label for="difficulty">Dificuldade da IA:</label>
+                <select id="difficulty">
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Médio</option>
+                    <option value="hard">Difícil</option>
+                    <option value="very_hard">Muito Difícil</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Iniciar Jogo</button>
+        </form>
+    </dialog>
+
+    <main>
+        <aside class="settings-panel">
+            <h2>Configurações</h2>
+            
+            <div class="setting-group">
+                <label for="color-x">Cor do Jogador (X):</label>
+                <input type="color" id="color-x" name="color-x" value="#00ffcc">
+            </div>
+
+            <div class="setting-group">
+                <label for="color-o">Cor do Jogador (O):</label>
+                <input type="color" id="color-o" name="color-o" value="#ff007f">
+            </div>
+
+            <div class="setting-group hidden" id="difficulty-settings">
+                <label for="difficulty-select">Dificuldade da IA:</label>
+                <select id="difficulty-select">
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Médio</option>
+                    <option value="hard">Difícil</option>
+                    <option value="very_hard">Muito Difícil</option>
+                </select>
+            </div>
+
+            <button id="btn-reset" class="btn">Reiniciar Partida</button>
+            <button id="btn-setup" class="btn btn-outline">Alterar Jogadores</button>
+            <button id="btn-clear-score" class="btn btn-outline">Zerar Placar</button>
+        </aside>
+
+        <section class="game-area">
+            <div class="scoreboard">
+                <div class="scorebox score-x">
+                    <span id="player1-label">Jogador 1 (X)</span>
+                    <strong id="score-val-x">0</strong>
+                </div>
+                <div class="scorebox score-draw">
+                    <span>Empates</span>
+                    <strong id="score-val-draw">0</strong>
+                </div>
+                <div class="scorebox score-o">
+                    <span id="player2-label">Jogador 2 (O)</span>
+                    <strong id="score-val-o">0</strong>
+                </div>
+            </div>
+
+            <div class="board-container">
+                <div id="board" class="board">
+                    <!-- Casas do Tabuleiro -->
+                    <div class="cell" data-index="0"></div>
+                    <div class="cell" data-index="1"></div>
+                    <div class="cell" data-index="2"></div>
+                    <div class="cell" data-index="3"></div>
+                    <div class="cell" data-index="4"></div>
+                    <div class="cell" data-index="5"></div>
+                    <div class="cell" data-index="6"></div>
+                    <div class="cell" data-index="7"></div>
+                    <div class="cell" data-index="8"></div>
+                </div>
+                <!-- Canvas para desenhar a linha de vitória -->
+                <canvas id="win-canvas"></canvas>
+            </div>
+            
+            <p id="game-status" aria-live="polite">Sua vez!</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Desenvolvido com ❤️ e APIs HTML5.</p>
+    </footer>
+
+    <!-- Modal HTML5 para fim de jogo -->
+    <dialog id="result-dialog">
+        <h2 id="dialog-title">Fim de Jogo</h2>
+        <p id="dialog-message">Você venceu!</p>
+        <button id="btn-dialog-close" class="btn">Jogar Novamente</button>
+    </dialog>
+
+    <!-- HTML5 Audio API assets (sons gerados por código ou arquivos pequenos) -->
+    <!-- Como não temos arquivos, vamos gerar com a Web Audio API no JS, então não precisamos da tag <audio> aqui -->
+
+    <!-- Scripts -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+    <script src="./js/app.js" type="module"></script>
+</body>
+</html>
