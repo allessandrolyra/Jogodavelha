@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jogo da Velha Avançado com HTML5 - Glassmorphism">
+    <title>Jogo da Velha Moderno</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f0f4f8">
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <header>
+        <h1>Jogo da Velha</h1>
+        <p>Desenvolvido no Laboratório AI Foursys</p>
+    </header>
+
+    <main>
+        <aside class="glass-panel settings-panel">
+            <h2>Configurações</h2>
+            
+
+
+            <div id="difficulty-group" class="setting-group" style="display: none;">
+                <label for="difficulty">Nível de Dificuldade:</label>
+                <select id="difficulty">
+                    <option value="easy">Iniciante (Aleatório)</option>
+                    <option value="medium">Intermediário</option>
+                    <option value="hard">Experiente</option>
+                    <option value="unbeatable" selected>Imbatível (A.I.)</option>
+                </select>
+            </div>
+
+            <button id="btn-tutorial" class="btn btn-outline" style="margin-top: 0;">📖 Como Jogar</button>
+            <button id="btn-reset" class="btn btn-primary">Reiniciar Partida</button>
+            <button id="btn-clear-score" class="btn btn-outline">Zerar Placar</button>
+        </aside>
+
+        <section class="game-area">
+            <div class="glass-panel scoreboard">
+                <div class="scorebox score-x">
+                    <span id="score-label-x">Você</span>
+                    <strong id="score-val-x">0</strong>
+                </div>
+                <div class="scorebox score-draw">
+                    <span>Empates</span>
+                    <strong id="score-val-draw">0</strong>
+                </div>
+                <div class="scorebox score-o">
+                    <span>A.I.</span>
+                    <strong id="score-val-o">0</strong>
+                </div>
+            </div>
+
+            <div class="board-container">
+                <div id="board" class="glass-panel board">
+                    <!-- Casas do Tabuleiro -->
+                    <div class="cell" data-index="0"></div>
+                    <div class="cell" data-index="1"></div>
+                    <div class="cell" data-index="2"></div>
+                    <div class="cell" data-index="3"></div>
+                    <div class="cell" data-index="4"></div>
+                    <div class="cell" data-index="5"></div>
+                    <div class="cell" data-index="6"></div>
+                    <div class="cell" data-index="7"></div>
+                    <div class="cell" data-index="8"></div>
+                </div>
+                <!-- Canvas para desenhar a linha de vitória -->
+                <canvas id="win-canvas"></canvas>
+            </div>
+            
+            <div class="glass-panel status-panel">
+                <p id="game-status" aria-live="polite">Sua vez!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal HTML5 para Escolha de Modo e Nomes -->
+    <dialog id="mode-dialog" class="glass-dialog">
+        <h2 id="mode-dialog-title">Configurar Partida</h2>
+        
+        <div id="mode-selection-step">
+            <p>Como você deseja jogar?</p>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                <button id="btn-mode-ai" class="btn btn-primary">🤖 Jogador vs I.A.</button>
+                <button id="btn-mode-pvp" class="btn btn-outline" style="margin-top: 0;">👥 Jogador vs Jogador</button>
+            </div>
+        </div>
+
+        <div id="name-input-step" style="display: none; text-align: left; margin-top: 1.5rem;">
+            <div class="setting-group">
+                <label for="name-x" id="label-name-x">Nome do Jogador (X):</label>
+                <input type="text" id="name-x" placeholder="Digite o nome..." class="input-text">
+            </div>
+            <div class="setting-group" id="group-name-o">
+                <label for="name-o">Nome do Jogador (O):</label>
+                <input type="text" id="name-o" placeholder="Digite o nome..." class="input-text">
+            </div>
+            <button id="btn-start-game" class="btn btn-primary" style="margin-top: 1rem;">🚀 Começar Partida</button>
+            <button id="btn-back-to-mode" class="btn btn-outline" style="margin-top: 0.5rem; font-size: 0.8rem; padding: 10px;">Voltar</button>
+        </div>
+    </dialog>
+
+    <!-- Modal HTML5 para fim de jogo -->
+    <dialog id="result-dialog" class="glass-dialog">
+        <h2 id="dialog-title">Fim de Jogo</h2>
+        <p id="dialog-message">Você venceu!</p>
+        <button id="btn-dialog-close" class="btn btn-primary">Jogar Novamente</button>
+    </dialog>
+
+    <!-- Modal HTML5 para Tutorial -->
+    <dialog id="tutorial-dialog" class="glass-dialog tutorial">
+        <h2>Como Jogar</h2>
+        <div class="tutorial-content" style="text-align: left; margin-bottom: 2rem;">
+            <p><strong>1. Objetivo:</strong> O objetivo do jogo é conseguir alinhar três de seus símbolos (X ou O) em uma linha horizontal, vertical ou diagonal.</p>
+            <br>
+            <p><strong>2. Regras:</strong></p>
+            <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.5;">
+                <li>O jogo é jogado em um tabuleiro 3x3.</li>
+                <li>Você é o jogador <strong>X</strong> e sempre faz o primeiro movimento nesta versão de simulação.</li>
+                <li>A Inteligência Artificial joga com o <strong>O</strong>.</li>
+                <li>O jogo termina quando um jogador consegue 3 em linha, ou se todas as casas estiverem preenchidas (Empate).</li>
+            </ul>
+            <br>
+            <p><strong>3. Dificuldade:</strong> Configure no painel lateral o nível de esperteza da IA da Foursys. O nível "Imbatível" utiliza o algoritmo Minimax para prever todas as ramificações possíveis.</p>
+        </div>
+        <button id="btn-tutorial-close" class="btn btn-primary">Entendi, vamos jogar!</button>
+    </dialog>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => {
+                    console.log('SW Registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>
